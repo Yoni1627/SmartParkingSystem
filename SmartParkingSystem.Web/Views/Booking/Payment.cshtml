@@ -1,0 +1,67 @@
+@model SmartParkingSystem.Core.Entities.Reservation
+@using SmartParkingSystem.Core.Entities
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-panel mt-5">
+            <h2 class="mb-4 text-center">Complete Payment</h2>
+            
+            <div class="card bg-transparent border-secondary mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-muted mb-3">Booking Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Zone:</span>
+                        <span class="fw-bold">@Model.ParkingSlot?.ParkingZone?.Name</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Slot:</span>
+                        <span class="badge badge-success">@Model.ParkingSlot?.Name</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Duration:</span>
+                        <span>@((Model.EndTime - Model.StartTime).TotalHours.ToString("0.0")) Hours</span>
+                    </div>
+                    <hr class="border-secondary">
+                    <div class="d-flex justify-content-between fs-4 text-primary fw-bold">
+                        <span>Total Due:</span>
+                        <span>$@Model.TotalAmount.ToString("0.00")</span>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="ProcessPayment" method="post">
+                <input type="hidden" name="reservationId" value="@Model.Id" />
+                
+                <h5 class="mb-3">Select Payment Method</h5>
+                <div class="mb-4">
+                    <div class="form-check glass-panel mb-2 py-2" style="cursor: pointer;" onclick="document.getElementById('pmCard').checked = true;">
+                        <input class="form-check-input ms-2" type="radio" name="method" id="pmCard" value="@PaymentMethod.CreditCard" checked>
+                        <label class="form-check-label ms-2 d-flex align-items-center" for="pmCard">
+                            <i class="fa-regular fa-credit-card fa-fw fs-4 me-3 text-primary"></i> Credit / Debit Card
+                        </label>
+                    </div>
+                    <div class="form-check glass-panel mb-2 py-2" style="cursor: pointer;" onclick="document.getElementById('pmMoney').checked = true;">
+                        <input class="form-check-input ms-2" type="radio" name="method" id="pmMoney" value="@PaymentMethod.MobileMoney">
+                        <label class="form-check-label ms-2 d-flex align-items-center" for="pmMoney">
+                            <i class="fa-solid fa-mobile-screen fa-fw fs-4 me-3 text-success"></i> Mobile Money
+                        </label>
+                    </div>
+                    <div class="form-check glass-panel mb-2 py-2" style="cursor: pointer;" onclick="document.getElementById('pmWallet').checked = true;">
+                        <input class="form-check-input ms-2" type="radio" name="method" id="pmWallet" value="@PaymentMethod.Wallet">
+                        <label class="form-check-label ms-2 d-flex align-items-center" for="pmWallet">
+                            <i class="fa-solid fa-wallet fa-fw fs-4 me-3 text-warning"></i> In-App Wallet
+                        </label>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Pay $@Model.TotalAmount.ToString("0.00") securely</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

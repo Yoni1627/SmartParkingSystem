@@ -1,0 +1,12 @@
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\bin\Debug\net10.0\SmartParkingSystem.Core.deps.json
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\bin\Debug\net10.0\SmartParkingSystem.Core.dll
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\bin\Debug\net10.0\SmartParkingSystem.Core.pdb
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.AssemblyInfoInputs.cache
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.AssemblyInfo.cs
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.csproj.CoreCompileInputs.cache
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.sourcelink.json
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.dll
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\refint\SmartParkingSystem.Core.dll
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\SmartParkingSystem.Core.pdb
+C:\Users\abine\Documents\SmartParkingSystem\SmartParkingSystem.Core\obj\Debug\net10.0\ref\SmartParkingSystem.Core.dll

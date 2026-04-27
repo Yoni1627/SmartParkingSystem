@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-0">Dashboard Overview</h2>
+        <p class="text-muted">Welcome to the Smart Parking Management System.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="glass-panel text-center">
+            <i class="fa-solid fa-map-location-dot fa-3x text-primary mb-3"></i>
+            <h3>Zones</h3>
+            <p class="text-muted mb-0">Manage parking areas</p>
+            <a asp-action="Zones" class="btn btn-primary mt-3 w-100">Go to Zones</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel text-center">
+            <i class="fa-solid fa-car fa-3x text-success mb-3"></i>
+            <h3>Slots</h3>
+            <p class="text-muted mb-0">Manage parking spots</p>
+            <a asp-action="Slots" class="btn btn-primary mt-3 w-100">Go to Slots</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel text-center">
+            <i class="fa-solid fa-chart-line fa-3x text-warning mb-3"></i>
+            <h3>Reports</h3>
+            <p class="text-muted mb-0">View revenue & occupancy</p>
+            <button class="btn btn-glass mt-3 w-100" disabled>Coming Soon</button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel text-center">
+            <i class="fa-solid fa-users-gear fa-3x text-danger mb-3"></i>
+            <h3>Users</h3>
+            <p class="text-muted mb-0">Manage accounts</p>
+            <button class="btn btn-glass mt-3 w-100" disabled>Coming Soon</button>
+        </div>
+    </div>
+</div>

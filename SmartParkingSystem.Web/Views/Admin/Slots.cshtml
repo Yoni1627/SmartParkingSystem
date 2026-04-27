@@ -1,0 +1,124 @@
+@model IEnumerable<SmartParkingSystem.Core.Entities.ParkingSlot>
+@using SmartParkingSystem.Core.Entities
+
+@{
+    ViewData["Title"] = "Manage Slots";
+    var zones = ViewBag.Zones as IEnumerable<SmartParkingSystem.Core.Entities.ParkingZone>;
+    var selectedZone = ViewBag.SelectedZone as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Parking Slots</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSlotModal">
+        <i class="fa-solid fa-plus me-2"></i>Add New Slot
+    </button>
+</div>
+
+<!-- Filter -->
+<div class="glass-panel mb-4 p-3 d-flex align-items-center">
+    <span class="me-3 text-muted">Filter by Zone:</span>
+    <form asp-action="Slots" method="get" class="d-flex gap-2">
+        <select name="zoneId" class="form-control-glass w-auto" onchange="this.form.submit()">
+            <option value="">All Zones</option>
+            @if(zones != null)
+            {
+                foreach(var zone in zones)
+                {
+                    if (selectedZone == zone.Id) {
+                        <option value="@zone.Id" selected>@zone.Name</option>
+                    } else {
+                        <option value="@zone.Id">@zone.Name</option>
+                    }
+                }
+            }
+        </select>
+    </form>
+</div>
+
+<div class="glass-panel">
+    <table class="table table-glass">
+        <thead>
+            <tr>
+                <th>Slot ID</th>
+                <th>Name</th>
+                <th>Zone</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td><span class="fw-bold">@item.Name</span></td>
+                    <td>@(item.ParkingZone?.Name ?? "N/A")</td>
+                    <td>
+                        @if (item.Status == SlotStatus.Free) { <span class="badge badge-success">Free</span> }
+                        else if (item.Status == SlotStatus.Booked) { <span class="badge badge-danger">Booked</span> }
+                        else { <span class="badge badge-warning">Maintenance</span> }
+                    </td>
+                    <td class="text-end">
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <select name="status" class="form-control-glass py-1 px-2 d-inline w-auto text-sm" onchange="this.form.submit()">
+                                <option value="@SlotStatus.Free" selected="@(item.Status == SlotStatus.Free)">Free</option>
+                                <option value="@SlotStatus.Booked" selected="@(item.Status == SlotStatus.Booked)">Booked</option>
+                                <option value="@SlotStatus.Maintenance" selected="@(item.Status == SlotStatus.Maintenance)">Maintenance</option>
+                            </select>
+                        </form>
+                        <form asp-action="DeleteSlot" method="post" class="d-inline ms-2">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this slot?');">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">No slots found matching the criteria.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Create Slot Modal -->
+<div class="modal fade" id="createSlotModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content glass-panel p-0 border-0">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-white">Add New Slot</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="CreateSlot" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Slot Name</label>
+                        <input type="text" name="Name" class="form-control-glass" required placeholder="e.g. A1" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Assign to Zone</label>
+                        <select name="ParkingZoneId" class="form-control-glass" required>
+                            <option value="">Select a zone...</option>
+                            @if(zones != null)
+                            {
+                                foreach(var zone in zones)
+                                {
+                                    <option value="@zone.Id">@zone.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-glass" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Slot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

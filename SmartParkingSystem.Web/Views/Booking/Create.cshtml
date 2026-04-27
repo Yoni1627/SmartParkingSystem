@@ -1,0 +1,50 @@
+@model SmartParkingSystem.Core.Entities.Reservation
+
+@{
+    ViewData["Title"] = "Book Slot";
+    var slot = Model.ParkingSlot;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-panel mt-5">
+            <h2 class="mb-4">Book Parking Slot</h2>
+            
+            <div class="mb-4 p-3 rounded" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);">
+                <div class="d-flex justify-content-between">
+                    <span><strong>Zone:</strong> @slot?.ParkingZone?.Name</span>
+                    <span><strong>Rate:</strong> $@slot?.ParkingZone?.HourlyRate.ToString("0.00")/hr</span>
+                </div>
+                <div class="mt-2">
+                    <span><strong>Selected Slot:</strong> <span class="badge badge-success fs-6">@slot?.Name</span></span>
+                </div>
+            </div>
+
+            <form asp-action="ConfirmBooking" method="post">
+                <input type="hidden" asp-for="ParkingSlotId" />
+                
+                <div class="mb-3">
+                    <label class="form-label">Start Time</label>
+                    <input type="datetime-local" asp-for="StartTime" class="form-control-glass" required />
+                    <span asp-validation-for="StartTime" class="text-danger small"></span>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">End Time</label>
+                    <input type="datetime-local" asp-for="EndTime" class="form-control-glass" required />
+                    <span asp-validation-for="EndTime" class="text-danger small"></span>
+                </div>
+
+                <div class="alert alert-warning text-dark py-2 px-3 small">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    Minimum booking duration is 30 mins, maximum is 12 hours.
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Proceed to Summary</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-glass">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+@model IEnumerable<SmartParkingSystem.Core.Entities.ParkingZone>
+@using SmartParkingSystem.Core.Entities
+
+@{
+    ViewData["Title"] = "Smart Parking";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold mb-3">Find Your Perfect Spot</h1>
+    <p class="lead text-muted">Real-time availability, seamless booking, stress-free parking.</p>
+    <div class="d-inline-flex align-items-center bg-black bg-opacity-25 rounded-pill px-4 py-2 mt-3 border border-secondary">
+        <span class="position-relative d-flex h-3 w-3 me-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+        </span>
+        <span id="viewing-count">1</span>&nbsp;people are currently viewing parking availability
+    </div>
+</div>
+
+<div class="container">
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted my-5 py-5 glass-panel">
+            <i class="fa-solid fa-parking fa-4x mb-3 opacity-50"></i>
+            <h3>No parking zones available yet.</h3>
+            <p>Admin needs to set up the parking infrastructure first.</p>
+        </div>
+    }
+    
+    @foreach (var zone in Model)
+    {
+        <div class="glass-panel mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+                <div>
+                    <h2 class="mb-1">@zone.Name</h2>
+                    <p class="text-muted mb-0"><i class="fa-solid fa-location-dot me-2"></i>@zone.Location</p>
+                </div>
+                <div class="text-end">
+                    <div class="fs-4 fw-bold text-primary">$@zone.HourlyRate.ToString("0.00")<span class="fs-6 text-muted fw-normal">/hr</span></div>
+                </div>
+            </div>
+
+            <div class="slot-grid">
+                @foreach (var slot in zone.Slots)
+                {
+                    var cssClass = slot.Status == SlotStatus.Free ? "slot-free" : 
+                                  (slot.Status == SlotStatus.Booked ? "slot-booked" : "slot-maintenance");
+                    
+                    <div class="slot-item @cssClass" id="slot-@slot.Id" onclick="bookSlot(@slot.Id, '@slot.Name', @zone.HourlyRate)">
+                        <div class="slot-name">@slot.Name</div>
+                        <div class="slot-status-text" id="slot-status-@slot.Id">@slot.Status.ToString()</div>
+                    </div>
+                }
+                @if (!zone.Slots.Any())
+                {
+                    <div class="col-12 text-center text-muted">No slots added to this zone.</div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.10/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/parkingHub")
+            .build();
+
+        connection.on("UpdateViewingCount", (count) => {
+            document.getElementById("viewing-count").innerText = count;
+        });
+
+        connection.on("ReceiveSlotStatusUpdate", (slotId, status) => {
+            const slotEl = document.getElementById("slot-" + slotId);
+            const statusEl = document.getElementById("slot-status-" + slotId);
+            
+            if (slotEl && statusEl) {
+                // Remove old classes
+                slotEl.classList.remove('slot-free', 'slot-booked', 'slot-maintenance');
+                
+                // Add new class and update text
+                if (status === 'Free') {
+                    slotEl.classList.add('slot-free');
+                    statusEl.innerText = 'Free';
+                } else if (status === 'Booked') {
+                    slotEl.classList.add('slot-booked');
+                    statusEl.innerText = 'Booked';
+                } else {
+                    slotEl.classList.add('slot-maintenance');
+                    statusEl.innerText = 'Maintenance';
+                }
+            }
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        function bookSlot(slotId, slotName, hourlyRate) {
+            const statusText = document.getElementById("slot-status-" + slotId).innerText;
+            if (statusText !== 'Free') {
+                alert('This slot is currently ' + statusText + ' and cannot be booked.');
+                return;
+            }
+            
+            // Redirect to booking page
+            window.location.href = `/Booking/Create?slotId=${slotId}`;
+        }
+    </script>
+}
