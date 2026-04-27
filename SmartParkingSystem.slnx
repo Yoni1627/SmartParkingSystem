@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SmartParkingSystem.Core/SmartParkingSystem.Core.csproj" />
+  <Project Path="SmartParkingSystem.Infrastructure/SmartParkingSystem.Infrastructure.csproj" />
+  <Project Path="SmartParkingSystem.Web/SmartParkingSystem.Web.csproj" />
+</Solution>
