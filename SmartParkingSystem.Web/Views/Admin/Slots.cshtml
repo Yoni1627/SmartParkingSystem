@@ -35,56 +35,53 @@
     </form>
 </div>
 
-<div class="glass-panel">
-    <table class="table table-glass">
-        <thead>
-            <tr>
-                <th>Slot ID</th>
-                <th>Name</th>
-                <th>Zone</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td><span class="fw-bold">@item.Name</span></td>
-                    <td>@(item.ParkingZone?.Name ?? "N/A")</td>
-                    <td>
-                        @if (item.Status == SlotStatus.Free) { <span class="badge badge-success">Free</span> }
-                        else if (item.Status == SlotStatus.Booked) { <span class="badge badge-danger">Booked</span> }
-                        else { <span class="badge badge-warning">Maintenance</span> }
-                    </td>
-                    <td class="text-end">
-                        <form asp-action="UpdateStatus" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <select name="status" class="form-control-glass py-1 px-2 d-inline w-auto text-sm" onchange="this.form.submit()">
-                                <option value="@SlotStatus.Free" selected="@(item.Status == SlotStatus.Free)">Free</option>
-                                <option value="@SlotStatus.Booked" selected="@(item.Status == SlotStatus.Booked)">Booked</option>
-                                <option value="@SlotStatus.Maintenance" selected="@(item.Status == SlotStatus.Maintenance)">Maintenance</option>
-                            </select>
-                        </form>
-                        <form asp-action="DeleteSlot" method="post" class="d-inline ms-2">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this slot?');">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-            @if (!Model.Any())
-            {
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">No slots found matching the criteria.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="glass-panel h-100 position-relative">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted small">Slot ID: #@item.Id</span>
+                    @if (item.Status == SlotStatus.Free) { <span class="badge badge-success">Free</span> }
+                    else if (item.Status == SlotStatus.Booked) { <span class="badge badge-danger">Booked</span> }
+                    else { <span class="badge badge-warning">Maintenance</span> }
+                </div>
+                
+                <h3 class="mb-1">@item.Name</h3>
+                <p class="text-muted small mb-3">@(item.ParkingZone?.Name ?? "No Zone")</p>
+                
+                <hr class="border-secondary opacity-20 my-3">
+                
+                <div class="d-flex gap-2 align-items-center">
+                    <form asp-action="UpdateStatus" method="post" class="flex-grow-1">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <select name="status" class="form-control-glass py-1 px-2 text-xs" onchange="this.form.submit()">
+                            <option value="@SlotStatus.Free" selected="@(item.Status == SlotStatus.Free)">Set Free</option>
+                            <option value="@SlotStatus.Booked" selected="@(item.Status == SlotStatus.Booked)">Set Booked</option>
+                            <option value="@SlotStatus.Maintenance" selected="@(item.Status == SlotStatus.Maintenance)">Set Maint.</option>
+                        </select>
+                    </form>
+                    
+                    <form asp-action="DeleteSlot" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger opacity-50 hover-opacity-100 transition-all" onclick="return confirm('Delete this slot?');">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@if (!Model.Any())
+{
+    <div class="glass-panel text-center py-5 mt-4">
+        <i class="fa-solid fa-magnifying-glass fa-3x mb-3 text-muted opacity-30"></i>
+        <h3 class="text-muted">No slots found.</h3>
+        <p class="text-secondary">Try changing the zone filter or add a new slot.</p>
+    </div>
+}
 
 <!-- Create Slot Modal -->
 <div class="modal fade" id="createSlotModal" tabindex="-1" aria-hidden="true">

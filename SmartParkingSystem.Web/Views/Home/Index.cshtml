@@ -40,17 +40,36 @@
                 </div>
             </div>
 
-            <div class="slot-grid">
-                @foreach (var slot in zone.Slots)
-                {
-                    var cssClass = slot.Status == SlotStatus.Free ? "slot-free" : 
-                                  (slot.Status == SlotStatus.Booked ? "slot-booked" : "slot-maintenance");
-                    
-                    <div class="slot-item @cssClass" id="slot-@slot.Id" onclick="bookSlot(@slot.Id, '@slot.Name', @zone.HourlyRate)">
-                        <div class="slot-name">@slot.Name</div>
-                        <div class="slot-status-text" id="slot-status-@slot.Id">@slot.Status.ToString()</div>
-                    </div>
-                }
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle" style="border-color: var(--border-color); color: var(--text-primary); max-width: auto; width: max-content;">
+                    <tbody>
+                        <tr>
+                            @foreach (var slot in zone.Slots)
+                            {
+                                <td style="min-width: 80px; border-color: rgba(255,255,255,0.2);">@slot.Name</td>
+                            }
+                        </tr>
+                        <tr>
+                            @foreach (var slot in zone.Slots)
+                            {
+                                <td id="slot-icon-@slot.Id" style="font-size: 1.5rem; border-color: rgba(255,255,255,0.2);">
+                                    @(slot.Status == SlotStatus.Free ? "🟢" : (slot.Status == SlotStatus.Booked ? "🔴" : "🟡"))
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            @foreach (var slot in zone.Slots)
+                            {
+                                var isFree = slot.Status == SlotStatus.Free;
+                                <td style="border-color: rgba(255,255,255,0.2);">
+                                    <div id="slot-status-@slot.Id" style="cursor: @(isFree ? "pointer" : "not-allowed"); text-decoration: @(isFree ? "underline" : "none");" onclick="bookSlot(@slot.Id, '@slot.Name', @zone.HourlyRate)">
+                                        @slot.Status.ToString()
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
                 @if (!zone.Slots.Any())
                 {
                     <div class="col-12 text-center text-muted">No slots added to this zone.</div>
@@ -72,23 +91,25 @@
         });
 
         connection.on("ReceiveSlotStatusUpdate", (slotId, status) => {
-            const slotEl = document.getElementById("slot-" + slotId);
+            const iconEl = document.getElementById("slot-icon-" + slotId);
             const statusEl = document.getElementById("slot-status-" + slotId);
             
-            if (slotEl && statusEl) {
-                // Remove old classes
-                slotEl.classList.remove('slot-free', 'slot-booked', 'slot-maintenance');
-                
-                // Add new class and update text
+            if (iconEl && statusEl) {
                 if (status === 'Free') {
-                    slotEl.classList.add('slot-free');
+                    iconEl.innerText = '🟢';
                     statusEl.innerText = 'Free';
+                    statusEl.style.cursor = 'pointer';
+                    statusEl.style.textDecoration = 'underline';
                 } else if (status === 'Booked') {
-                    slotEl.classList.add('slot-booked');
+                    iconEl.innerText = '🔴';
                     statusEl.innerText = 'Booked';
+                    statusEl.style.cursor = 'not-allowed';
+                    statusEl.style.textDecoration = 'none';
                 } else {
-                    slotEl.classList.add('slot-maintenance');
+                    iconEl.innerText = '🟡';
                     statusEl.innerText = 'Maintenance';
+                    statusEl.style.cursor = 'not-allowed';
+                    statusEl.style.textDecoration = 'none';
                 }
             }
         });
@@ -96,7 +117,7 @@
         connection.start().catch(err => console.error(err.toString()));
 
         function bookSlot(slotId, slotName, hourlyRate) {
-            const statusText = document.getElementById("slot-status-" + slotId).innerText;
+            const statusText = document.getElementById("slot-status-" + slotId).innerText.trim();
             if (statusText !== 'Free') {
                 alert('This slot is currently ' + statusText + ' and cannot be booked.');
                 return;

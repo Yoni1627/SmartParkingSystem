@@ -34,18 +34,21 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <!-- Admin Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Admin
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark glass-panel" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Zones">Manage Zones</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Slots">Manage Slots</a></li>
-                            </ul>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Admin Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark glass-panel" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Zones">Manage Zones</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Slots">Manage Slots</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartParkingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd2a640bf6bf584686d7df08ef64c7a770ec2fd1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eca5d6a809e2b90d57b5a3075cff0f2b2cfda0a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartParkingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartParkingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

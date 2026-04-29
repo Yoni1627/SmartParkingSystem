@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using SmartParkingSystem.Core.Entities;
 using SmartParkingSystem.Infrastructure.Data;
 
 namespace SmartParkingSystem.Web.Controllers
 {
-    // [Authorize(Roles = "Admin")] // Commented out for dev simplicity until seed data is ready
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,6 +31,9 @@ namespace SmartParkingSystem.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateZone([FromForm] ParkingZone zone)
         {
+            // Remove navigation properties from validation
+            ModelState.Remove("Slots");
+            
             if (ModelState.IsValid)
             {
                 _context.Add(zone);
@@ -69,6 +73,9 @@ namespace SmartParkingSystem.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSlot([FromForm] ParkingSlot slot)
         {
+            // Remove navigation properties from validation
+            ModelState.Remove("ParkingZone");
+
             if (ModelState.IsValid)
             {
                 _context.Add(slot);

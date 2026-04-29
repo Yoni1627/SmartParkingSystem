@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SmartParkingSystem.Core.Entities;
 using SmartParkingSystem.Infrastructure.Data;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 
 namespace SmartParkingSystem.Web.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -80,7 +82,7 @@ namespace SmartParkingSystem.Web.Controllers
             model.TotalAmount = hours * slot.ParkingZone.HourlyRate;
             
             // Note: In a real app we'd get the actual UserId. Using a placeholder or User.FindFirstValue.
-            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "guest-user";
+            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             model.Status = ReservationStatus.Confirmed; // We skip pending for simplicity if no payment wall
 
             _context.Reservations.Add(model);
