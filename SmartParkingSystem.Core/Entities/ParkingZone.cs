@@ -17,6 +17,6 @@ namespace SmartParkingSystem.Core.Entities
         [Range(0, 1000)]
         public decimal HourlyRate { get; set; }
 
-        public ICollection<ParkingSlot> Slots { get; set; } = new List<ParkingSlot>();
+        public virtual ICollection<ParkingSlot>? Slots { get; set; } = new List<ParkingSlot>();
     }
 }
